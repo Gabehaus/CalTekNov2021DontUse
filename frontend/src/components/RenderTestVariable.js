@@ -2,7 +2,7 @@ import React from "react"
 
 const RenderTestVariable = ({ testVar }) => {
   return (
-    <div style={{ color: "blue" }}>
+    <div style={{ color: "white" }}>
       You are storing the following value in your reducer: {testVar}
       <br />
       width: {window.innerWidth}
