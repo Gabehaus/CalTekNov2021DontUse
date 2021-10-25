@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import HeaderMain from "../components/HeaderMain.js"
+import CarouselMain from "../components/CarouselMain.js"
+import CarouselMain2 from "../components/CarouselMain2.js"
+import Services from "../components/Services.js"
+import Projects from "../components/Projects.js"
+import Testimonials from "../components/Testimonials.js"
+import ShopJumbo from "../components/ShopJumbo.js"
+import ContactHome from "../components/ContactHome.js"
+import { listProjects } from "../actions/projectActions"
 import Aos from "aos"
 import "aos/dist/aos.css"
-import addToTestReducer from "../actions/testActions"
-import RenderTestVariable from "../components/RenderTestVariable"
 
 const HomeMain = () => {
   const dispatch = useDispatch()
-
-  const test = useSelector(state => state.test)
-  const { testReducerItem } = test
-
-  const [testVariable, setTestVariable] = useState(testReducerItem)
-
+  console.log("you can log to console from calteksolutions.com")
   useEffect(() => {
     Aos.init({
       duration: 2000,
@@ -23,18 +25,20 @@ const HomeMain = () => {
     }) // initialize animate on scroll
   }, [])
 
-  const handleSubmit = (e, string) => {
-    e.preventDefault()
-    dispatch(addToTestReducer(string))
-  }
+  useEffect(() => {
+    dispatch(listProjects())
+  }, [dispatch])
 
   return (
-    <div>
-      <form onSubmit={e => handleSubmit(e, testVariable)}>
-        <input onChange={e => setTestVariable(e.target.value)} />
-        <button>Submit</button>
-      </form>
-      <RenderTestVariable testVar={testReducerItem} />
+    <div style={{ position: "absolute", top: "0", left: "0", width: "100vw" }}>
+      <HeaderMain />
+      <CarouselMain />
+      <Services />
+      <CarouselMain2 />
+      <Projects />
+      <Testimonials />
+      <ShopJumbo />
+      <ContactHome />
     </div>
   )
 }

@@ -1,41 +1,85 @@
 import React from "react"
-import { Navbar, Nav } from "react-bootstrap"
-import logo3 from "../images/logo3.png"
+import { Route } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { LinkContainer } from "react-router-bootstrap"
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
+import SearchBox from "./SearchBox"
+import { logout } from "../actions/userActions"
 
 const Header = () => {
+  const dispatch = useDispatch()
+
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
+
+  const logoutHandler = () => {
+    dispatch(logout())
+  }
+
   return (
-    <Navbar style={{ background: "#0d0d0d" }} expand='lg' variant='dark'>
-      <Navbar.Brand href='#home' className='logo'>
-        {" "}
-        <img
-          alt=''
-          src={logo3}
-          width={
-            window.innerWidth > 1100
-              ? "250"
-              : window.innerWidth > 760
-              ? "150"
-              : "160"
-          }
-          className='d-inline-block align-top'
-          style={{ marginLeft: "6vw" }}
-        />
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls='basic-navbar-nav' />
-      <Navbar.Collapse id='basic-navbar-nav'>
-        <Nav className='mr-auto nav'>
-          <Nav.Link href='#contact' class='lin' style={{ color: "#555eff" }}>
-            Section 1
-          </Nav.Link>
-          <Nav.Link href='#contact' class='lin' style={{ color: "#555eff" }}>
-            Section 2
-          </Nav.Link>
-          <Nav.Link href='#contact' class='lin' style={{ color: "#555eff" }}>
-            Section 3
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+    <header>
+      <Navbar
+        bg='dark'
+        variant='dark'
+        expand='lg'
+        collapseOnSelect
+        className='header1'
+      >
+        <Container>
+          <LinkContainer to='/shop'>
+            <Navbar.Brand>ProShop</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <Route render={({ history }) => <SearchBox history={history} />} />
+            <Nav className='ml-auto'>
+              <LinkContainer to='/cart'>
+                <Nav.Link>
+                  <i className='fas fa-shopping-cart'></i> Cart
+                </Nav.Link>
+              </LinkContainer>
+              {userInfo ? (
+                <NavDropdown title={userInfo.name} id='username'>
+                  <LinkContainer to='/profile'>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to='/login'>
+                  <Nav.Link>
+                    <i className='fas fa-user'></i> Sign In
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title='Admin' id='adminmenu'>
+                  <LinkContainer to='/admin/userlist'>
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/productlist'>
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/orderlist'>
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/projectlist'>
+                    <NavDropdown.Item>Projects</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
+            </Nav>
+            <LinkContainer to='/'>
+              <Nav.Link>
+                <p style={{ color: "white", margin: "auto" }}>Cal-Tek Main</p>
+              </Nav.Link>
+            </LinkContainer>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
   )
 }
 
